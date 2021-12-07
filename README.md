@@ -18,9 +18,5 @@ Bugs and feature requests
 --------
 Have a bug or a feature request? Please feel free to contact us at [info@mm.co.th](info@mm.co.th).
 
-Copyright and license
---------
-Longdo Map API3 copyright 2012-2021 Metamedia Technology Co., Ltd. Demo code released under [Apache 2.0 license](https://github.com/MetamediaTechnology/longdo-map-demo-ios/blob/master/LICENSE).
-
 [1]: https://map.longdo.com/docs/
 [2]: http://api.longdo.com/map/doc/rest.php

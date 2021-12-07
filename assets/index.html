@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://apix.longdo.com/map3/?key=[YOUR_KEY_API]"></script>
+    <script>
+        let map
+
+        function init() {
+            map = new longdo.Map({
+                placeholder: document.getElementById("map")
+            });
+        }
+
+        function getZoom() {
+            return map.zoom();
+        }
+
+        function setZoom(level, anim) {
+            map.zoom(level, anim);
+        }
+
+        function getZoomRange() {
+            return map.zoomRange();
+        }
+
+        function setZoomRange(min, max) {
+            map.zoomRange({
+                min: min,
+                max: max
+            });
+        }
+
+        function getLocation() {
+            return map.location();
+        }
+
+        function setLocation(lon, lat, anim) {
+            map.location(
+                {
+                    lon: lon,
+                    lat: lat
+                }, 
+                anim
+            );
+        }
+
+        function getBound() {
+            return map.bound();
+        }
+
+        function setBound(minLon, minLat, maxLon, maxLat) {
+            map.bound({
+                minLon: minLon,
+                minLat: minLat,
+                maxLon: maxLon,
+                maxLat: maxLat
+            });
+        }
+
+        function move(x, y, anim) {
+            map.move(
+                {
+                    x: x,
+                    y: y
+                },
+                anim
+            );
+        }
+
+        function getLang() {
+            return map.language();
+        }
+
+        function getRotate() {
+            return map.rotate();
+        }
+
+        function setRotate(rotate) {
+            map.rotate(rotate);
+        }
+
+        function getPitch() {
+            return map.pitch();
+        }
+
+        function setPitch(pitch) {
+            map.pitch(pitch);
+        }
+
+        function getFilter() {
+            return map.enableFilter();
+        }
+
+        function setDarkFilter() {
+            map.enableFilter(longdo.Filter.Dark);
+        }
+
+        function setNoneFilter() {
+            map.enableFilter(longdo.Filter.None);
+        }
+
+    </script>
+</head>
+
+<body onload="init()" style="height: 100%; margin: 0px">
+    <div id="map" style="height: 100%"></div>
+</body>
+
+</html>

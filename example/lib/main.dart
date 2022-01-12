@@ -35,6 +35,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    Object? marker = map.currentState?.object(
+      "Marker",
+      "1",
+      [
+        {"lon": 100.5, "lat": 13.7},
+        {"detail": "Home"}
+      ],
+    );
+
     return MaterialApp(
       scaffoldMessengerKey: messenger,
       home: Scaffold(
@@ -98,7 +107,8 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         TextButton(
                           onPressed: () async {
-                            var zoomLevel = await map.currentState?.getZoom();
+                            var zoomLevel =
+                                await map.currentState?.call("zoom");
                             messenger.currentState?.showSnackBar(
                                 SnackBar(content: Text(zoomLevel)));
                           },
@@ -106,10 +116,10 @@ class _MyAppState extends State<MyApp> {
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setZoom(
+                            map.currentState?.call("zoom", [
                               double.parse(_zoomLevel),
-                              animation: _animation,
-                            );
+                              _animation,
+                            ]);
                           },
                           child: Text("SET"),
                         ),
@@ -165,7 +175,7 @@ class _MyAppState extends State<MyApp> {
                         TextButton(
                           onPressed: () async {
                             var zoomRange =
-                                await map.currentState?.getZoomRange();
+                                await map.currentState?.call("zoomRange");
                             messenger.currentState?.showSnackBar(
                                 SnackBar(content: Text(zoomRange.toString())));
                           },
@@ -173,8 +183,15 @@ class _MyAppState extends State<MyApp> {
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setZoomRange(
-                                double.parse(_min), double.parse(_max));
+                            map.currentState?.call(
+                              "zoomRange",
+                              [
+                                {
+                                  "min": double.parse(_min),
+                                  "max": double.parse(_max)
+                                }
+                              ],
+                            );
                           },
                           child: Text("SET"),
                         ),
@@ -232,7 +249,7 @@ class _MyAppState extends State<MyApp> {
                         TextButton(
                           onPressed: () async {
                             var location =
-                                await map.currentState?.getLocation();
+                                await map.currentState?.call("location");
                             messenger.currentState?.showSnackBar(
                                 SnackBar(content: Text(location.toString())));
                           },
@@ -240,10 +257,15 @@ class _MyAppState extends State<MyApp> {
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setLocation(
-                              double.parse(_lon),
-                              double.parse(_lat),
-                              animation: _animation,
+                            map.currentState?.call(
+                              "location",
+                              [
+                                {
+                                  "lon": double.parse(_lon),
+                                  "lat": double.parse(_lat),
+                                },
+                                _animation,
+                              ],
                             );
                           },
                           child: Text("SET"),
@@ -339,7 +361,7 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         TextButton(
                           onPressed: () async {
-                            var bound = await map.currentState?.getBound();
+                            var bound = await map.currentState?.call("bound");
                             messenger.currentState?.showSnackBar(
                                 SnackBar(content: Text(bound.toString())));
                           },
@@ -347,11 +369,16 @@ class _MyAppState extends State<MyApp> {
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setBound(
-                              double.parse(_minLon),
-                              double.parse(_minLat),
-                              double.parse(_maxLon),
-                              double.parse(_maxLat),
+                            map.currentState?.call(
+                              "bound",
+                              [
+                                {
+                                  "minLon": double.parse(_minLon),
+                                  "minLat": double.parse(_minLat),
+                                  "maxLon": double.parse(_maxLon),
+                                  "maxLat": double.parse(_maxLat),
+                                }
+                              ],
                             );
                           },
                           child: Text("SET"),
@@ -371,41 +398,49 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         TextButton(
                           onPressed: () {
-                            map.currentState?.move(
-                              -100.0,
-                              0,
-                              animation: _animation,
-                            );
+                            map.currentState?.call("move", [
+                              {
+                                "x": 100.0,
+                                "y": 0,
+                              },
+                              _animation,
+                            ]);
                           },
                           child: Text("WEST"),
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.move(
-                              0,
-                              100.0,
-                              animation: _animation,
-                            );
+                            map.currentState?.call("move", [
+                              {
+                                "x": 0,
+                                "y": 100,
+                              },
+                              _animation,
+                            ]);
                           },
                           child: Text("SOUTH"),
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.move(
-                              0,
-                              -100.0,
-                              animation: _animation,
-                            );
+                            map.currentState?.call("move", [
+                              {
+                                "x": 0,
+                                "y": -100,
+                              },
+                              _animation,
+                            ]);
                           },
                           child: Text("NORTH"),
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.move(
-                              100.0,
-                              0,
-                              animation: _animation,
-                            );
+                            map.currentState?.call("move", [
+                              {
+                                "x": -100.0,
+                                "y": 0,
+                              },
+                              _animation,
+                            ]);
                           },
                           child: Text("EAST"),
                         ),
@@ -424,7 +459,8 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         TextButton(
                           onPressed: () async {
-                            var language = await map.currentState?.getLang();
+                            var language =
+                                await map.currentState?.call("language");
                             messenger.currentState?.showSnackBar(
                                 SnackBar(content: Text(language)));
                           },
@@ -458,7 +494,7 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         TextButton(
                           onPressed: () async {
-                            var rotate = await map.currentState?.getRotate();
+                            var rotate = await map.currentState?.call("rotate");
                             messenger.currentState
                                 ?.showSnackBar(SnackBar(content: Text(rotate)));
                           },
@@ -466,7 +502,12 @@ class _MyAppState extends State<MyApp> {
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setRotate(_rotate);
+                            map.currentState?.call(
+                              "rotate",
+                              [
+                                _rotate,
+                              ],
+                            );
                           },
                           child: Text("SET"),
                         ),
@@ -499,7 +540,7 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         TextButton(
                           onPressed: () async {
-                            var pitch = await map.currentState?.getPitch();
+                            var pitch = await map.currentState?.call("pitch");
                             messenger.currentState
                                 ?.showSnackBar(SnackBar(content: Text(pitch)));
                           },
@@ -507,7 +548,12 @@ class _MyAppState extends State<MyApp> {
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setPitch(_pitch);
+                            map.currentState?.call(
+                              "pitch",
+                              [
+                                _pitch,
+                              ],
+                            );
                           },
                           child: Text("SET"),
                         ),
@@ -516,7 +562,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   ListTile(
                     title: Text(
-                      "Filter",
+                      "Marker",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -527,23 +573,33 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         TextButton(
                           onPressed: () async {
-                            var filter = await map.currentState?.getFilter();
-                            messenger.currentState
-                                ?.showSnackBar(SnackBar(content: Text(filter)));
+                            if (marker != null) {
+                              map.currentState?.call("Overlays.add", [
+                                marker,
+                              ]);
+                            }
                           },
-                          child: Text("GET"),
+                          child: Text("Add"),
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setDarkFilter();
+                            if (marker != null) {
+                              map.currentState?.objectCall(marker, "pop", [
+                                true,
+                              ]);
+                            }
                           },
-                          child: Text("DARK"),
+                          child: Text("Show"),
                         ),
                         TextButton(
                           onPressed: () {
-                            map.currentState?.setNoneFilter();
+                            if (marker != null) {
+                              map.currentState?.objectCall(marker, "pop", [
+                                false,
+                              ]);
+                            }
                           },
-                          child: Text("NONE"),
+                          child: Text("Hide"),
                         ),
                       ],
                     ),

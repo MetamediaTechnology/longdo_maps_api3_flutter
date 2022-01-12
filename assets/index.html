@@ -1,113 +1,114 @@
 <!DOCTYPE html>
-<html lang="en" style="height: 100%">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title></title>
+    <style>
+    html {
+      height: 100%
+    }
+
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font: 12px/1.2 sans-serif;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    </style>
     <script src="https://apix.longdo.com/map3/?key=[YOUR_KEY_API]"></script>
     <script>
-        let map
 
-        function init() {
-            map = new longdo.Map({
-                placeholder: document.getElementById("map")
-            });
-        }
+    let objectList = [];
 
-        function getZoom() {
-            return map.zoom();
-        }
+    function init() {
+      const placeholder = document.getElementById('map');
+      if (!window.longdo) {
+        placeholder.innerHTML = 'Unregistered app: ` + Const.bundleId + `';
+        return;
+      }
+      onerror = (message, source, lineno, colno) => {
+        console.log(message + ' @ ' + source + '#L' + lineno + ':' + colno);
+        return true;
+      };
 
-        function setZoom(level, anim) {
-            map.zoom(level, anim);
+      const map = new longdo.Map({
+        placeholder: placeholder
+      });
+      map.Ui.Geolocation?.visible(false)
+      for (const event of [` + events.substring(1) + `]) {
+          try {
+            map.Event.bind(event[2].toLocaleLowerCase() + event.substring(3),
+              data => console.log(JSON.stringify({ $event: event, data: serialize(data) })));
+          } catch (e) {
+            console.log(e);
+          }
         }
+      map.toJSON = map.Overlays.toJSON = map.Ui.toJSON = () => ({});
+      objectList[0] = map;
+    }
 
-        function getZoomRange() {
-            return map.zoomRange();
+    function parse(data) {
+      if (!data) return data;
+      if (data.$static) return longdo[data.$static][data.name];
+      if (data.$object) {
+        let object = objectList[data.$id]
+        if (!object) {
+          object = new longdo[data.$object](...data.args.map(parse));
+          object.$id = data.$id;
+          objectList[data.$id] = object
         }
+        return object;
+      }
+      return data;
+    }
 
-        function setZoomRange(min, max) {
-            map.zoomRange({
-                min: min,
-                max: max
-            });
+    function serialize(object) {
+      if (!object) return object;
+      if (object.$id) return { $object: true, $id: object.$id };
+      if (object.active) return { $object: null };
+      if (Array.isArray(object)) {
+        for (let i = 0; i < object.length; ++i) {
+          object[i] = serialize(object[i]);
         }
+      }
+      return object;
+    }
 
-        function getLocation() {
-            return map.location();
-        }
+    function call(method, args) {
+      let dot = method.indexOf('.');
+      if (dot < 0) {
+        return commit(objectList[0], method, args);
+      } else {
+        return commit(objectList[0][method.substring(0, dot)], method.substring(dot + 1), args);
+      }
+    }
 
-        function setLocation(lon, lat, anim) {
-            map.location(
-                {
-                    lon: lon,
-                    lat: lat
-                }, 
-                anim
-            );
-        }
+    function objectCall(object, method, args) {
+      return commit(parse(JSON.parse(object)), method, args);
+    }
 
-        function getBound() {
-            return map.bound();
-        }
-
-        function setBound(minLon, minLat, maxLon, maxLat) {
-            map.bound({
-                minLon: minLon,
-                minLat: minLat,
-                maxLon: maxLon,
-                maxLat: maxLat
-            });
-        }
-
-        function move(x, y, anim) {
-            map.move(
-                {
-                    x: x,
-                    y: y
-                },
-                anim
-            );
-        }
-
-        function getLang() {
-            return map.language();
-        }
-
-        function getRotate() {
-            return map.rotate();
-        }
-
-        function setRotate(rotate) {
-            map.rotate(rotate);
-        }
-
-        function getPitch() {
-            return map.pitch();
-        }
-
-        function setPitch(pitch) {
-            map.pitch(pitch);
-        }
-
-        function getFilter() {
-            return map.enableFilter();
-        }
-
-        function setDarkFilter() {
-            map.enableFilter(longdo.Filter.Dark);
-        }
-
-        function setNoneFilter() {
-            map.enableFilter(longdo.Filter.None);
-        }
+    function commit(executor, method, args) {
+      if (executor && executor[method]) {
+        return JSON.stringify(serialize(executor[method](...JSON.parse(args).map(parse))));
+      } else {
+        console.log(method + ' not found');
+      }
+    }
 
     </script>
 </head>
 
-<body onload="init()" style="height: 100%; margin: 0px">
-    <div id="map" style="height: 100%"></div>
+<body onload="init();">
+<div id="map"></div>
 </body>
 
-</html>
+</html>`;

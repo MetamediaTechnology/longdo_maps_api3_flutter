@@ -57,31 +57,38 @@
     }
 
     function parse(data) {
-      if (!data) return data;
-      if (data.$static) return longdo[data.$static][data.name];
-      if (data.$object) {
-        let object = objectList[data.$id]
-        if (!object) {
-          object = new longdo[data.$object](...data.args.map(parse));
-          object.$id = data.$id;
-          objectList[data.$id] = object
+        if (!data) return data;
+        if (data.$static) return longdo[data.$static][data.name];
+        if (data.$object) {
+          let object = objectList[data.$id];
+          if (!object) {
+            object = new longdo[data.$object](...data.args.map(parse));
+            object.$id = data.$id;
+            // TODO: Remove .map when implement MergeLayer, LayerType, LineStyle, ButtonType
+            // TODO: Handle delegate in *Options, TagCollection
+            // TODO: Free memory, when?
+            objectList[data.$id] = object;
+          }
+          return object;
         }
+
+        return data;
+      }
+
+      function serialize(object) {
+        if (!object) return object;
+        if (object.$id) return { $object: true, $id: object.$id };
+        if (object.active) return { $object: null };
+        // TODO: register to objectList & inc objectcount in RN side
+
+        if (Array.isArray(object)) {
+          for (let i = 0; i < object.length; ++i) {
+            object[i] = serialize(object[i]);
+          }
+        }
+
         return object;
       }
-      return data;
-    }
-
-    function serialize(object) {
-      if (!object) return object;
-      if (object.$id) return { $object: true, $id: object.$id };
-      if (object.active) return { $object: null };
-      if (Array.isArray(object)) {
-        for (let i = 0; i < object.length; ++i) {
-          object[i] = serialize(object[i]);
-        }
-      }
-      return object;
-    }
 
     function call(method, args) {
       let dot = method.indexOf('.');

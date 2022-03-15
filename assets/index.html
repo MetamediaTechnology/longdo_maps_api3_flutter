@@ -104,6 +104,11 @@
       }
     }
 
+    function ui(name, method, arg){
+      const result = objectList[0].Ui[name][method](arg);
+      return JSON.stringify(result);
+    }
+
     </script>
 </head>
 

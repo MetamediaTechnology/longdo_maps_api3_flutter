@@ -41,11 +41,8 @@ class LongdoMapState extends State<LongdoMapWidget> {
     _controller.loadHtmlString(content);
   }
 
-  Object object(String object, String id, List<Object> args) => {
-    "\$object": object,
-    "\$id": id,
-    "args": args
-  };
+  Object object(String object, String id, List<Object> args) =>
+      {"\$object": object, "\$id": id, "args": args};
 
   call(method, [List<Object> args = const []]) async {
     String data = await _controller.runJavascriptReturningResult(
@@ -63,5 +60,11 @@ class LongdoMapState extends State<LongdoMapWidget> {
             json.encode(args) +
             "');");
     return json.decode(data);
+  }
+
+  ui(name, method, [arg]) async {
+    String script = "ui(\"$name\", \"$method\", ${json.encode(arg)})";
+    String result = await _controller.runJavascriptReturningResult(script);
+    return json.decode(result);
   }
 }

@@ -400,7 +400,7 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () {
                             map.currentState?.call("move", [
                               {
-                                "x": 100.0,
+                                "x": -100.0,
                                 "y": 0,
                               },
                               _animation,
@@ -436,7 +436,7 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () {
                             map.currentState?.call("move", [
                               {
-                                "x": -100.0,
+                                "x": 100.0,
                                 "y": 0,
                               },
                               _animation,

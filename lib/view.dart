@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show MethodChannel, rootBundle;
 import 'package:webview_flutter/webview_flutter.dart';
 
 class LongdoMapWidget extends StatefulWidget {
   final String apiKey;
+  final String bundleId;
 
-  const LongdoMapWidget({required this.apiKey, Key? key}) : super(key: key);
+  const LongdoMapWidget(
+      {required this.apiKey, required this.bundleId, Key? key})
+      : super(key: key);
 
   @override
   LongdoMapState createState() => LongdoMapState();
@@ -35,10 +38,17 @@ class LongdoMapState extends State<LongdoMapWidget> {
   }
 
   void _load() async {
+    // get html
     String content = await rootBundle
         .loadString("packages/longdo_maps_api3_flutter/assets/index.html");
+    // set api key
     content = content.replaceFirst("[YOUR_KEY_API]", widget.apiKey);
-    _controller.loadHtmlString(content);
+    content = content.replaceFirst(
+        "[YOUR_SHORT_KEY_API]", "${widget.apiKey.substring(0, 8)}...");
+    // set application id
+    content = content.replaceFirst("[YOUR_BUNDLE_ID]", widget.bundleId);
+    // load
+    _controller.loadHtmlString(content, baseUrl: "http://${widget.bundleId}/");
   }
 
   Object object(String object, String id, List<Object> args) =>

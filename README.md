@@ -7,7 +7,7 @@ In your flutter project add the dependency:
 ```
 dependencies:
   ...
-  longdo_maps_api3_flutter: ^1.2.0
+  longdo_maps_api3_flutter: ^1.3.0
 ```
 
 How do I use Longdo Map API3?

@@ -1,3 +1,7 @@
+## 1.3.0
+### Fixed
+- Error response
+
 ## 1.2.0
 ### Add
 - ui

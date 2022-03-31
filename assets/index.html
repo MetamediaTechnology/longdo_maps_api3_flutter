@@ -24,7 +24,7 @@
     }
 
     </style>
-    <script src="https://apix.longdo.com/map3/?key=[YOUR_KEY_API]"></script>
+    <script src="https://api.longdo.com/map3/?key=[YOUR_KEY_API]"></script>
     <script>
 
     let objectList = [];
@@ -32,7 +32,7 @@
     function init() {
       const placeholder = document.getElementById('map');
       if (!window.longdo) {
-        placeholder.innerHTML = 'Unregistered app: ` + Const.bundleId + `';
+        placeholder.innerHTML = '<p><b>UNREGISTERED APP</b></span><p><b>ID</b>: [YOUR_BUNDLE_ID]</p><p><b>KEY</b>: [YOUR_SHORT_KEY_API]</p>'
         return;
       }
       onerror = (message, source, lineno, colno) => {

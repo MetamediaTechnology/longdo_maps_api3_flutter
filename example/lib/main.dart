@@ -610,6 +610,7 @@ class _MyAppState extends State<MyApp> {
           ),
           body: LongdoMapWidget(
             apiKey: "",
+            bundleId: "",
             key: map,
           )),
     );
